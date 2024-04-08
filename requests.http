@@ -1,0 +1,24 @@
+### GRPC Request Example
+GRPC localhost:50051/v1.example.ExampleService/Example
+Authorization: Bearer {{$auth.token("keycloak")}}
+
+{
+  "title": "sadkkk",
+  "description": "asd",
+  "body": "asdsdaf"
+}
+
+
+
+
+### Grpc Gateway Http Request Example
+POST http://localhost:8080/grpc/v1/example
+Content-Type: application/json
+Authorization: Bearer {{$auth.token("keycloak")}}
+
+{
+  "title": "lalal",
+  "body": "aasd",
+  "description": "adfaf"
+}
+
