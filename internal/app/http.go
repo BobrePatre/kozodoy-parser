@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/BobrePatre/ProjectTemplate/internal/constants"
 	"github.com/BobrePatre/ProjectTemplate/internal/delivery/http/middlewares"
-	"github.com/BobrePatre/ProjectTemplate/internal/delivery/http/routes/example"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log/slog"
@@ -27,18 +26,26 @@ func (a *App) initHTTPServer(_ context.Context) error {
 	router.Use(gin.Recovery())
 	router.Use(middlewares.SlogLoggerMiddleware())
 
-	// TODO: create config for cors
-	router.Use(cors.Default())
+	corsCfg := a.diProvider.CorsConfig()
+	router.Use(cors.New(cors.Config{
+		AllowAllOrigins:           corsCfg.AllowAllOrigins,
+		AllowOrigins:              corsCfg.AllowOrigins,
+		AllowMethods:              corsCfg.AllowMethods,
+		AllowHeaders:              corsCfg.AllowHeaders,
+		MaxAge:                    corsCfg.MaxAge,
+		AllowCredentials:          corsCfg.AllowCredentials,
+		AllowWildcard:             corsCfg.AllowWildcard,
+		ExposeHeaders:             corsCfg.ExposeHeaders,
+		AllowBrowserExtensions:    corsCfg.AllowBrowserExtensions,
+		AllowWebSockets:           corsCfg.AllowWebSockets,
+		AllowFiles:                corsCfg.AllowFiles,
+		AllowPrivateNetwork:       corsCfg.AllowPrivateNetwork,
+		OptionsResponseStatusCode: corsCfg.OptionsResponseStatusCode,
+		CustomSchemas:             corsCfg.CustomSchemas,
+	}))
 
-	authMiddlewareConstructor := a.diProvider.HttpAuthMiddlewareConstructor()
-
-	v1RouterGroup := router.Group("/api/v1")
-	example.NewRouter(v1RouterGroup,
-		authMiddlewareConstructor(a.diProvider.WebAuthProvider()),
-		a.diProvider.ExampleHandler(),
-	).RegisterRoutes()
-
-	router.Any("/grpc/v1/*any", gin.WrapH(a.gatewayServer))
+	//authMiddlewareConstructor := a.diProvider.HttpAuthMiddlewareConstructor()
+	//v1RouterGroup := router.Group("/api/v1")
 
 	a.httpServer = &http.Server{
 		Addr:    a.diProvider.HTTPConfig().Address(),

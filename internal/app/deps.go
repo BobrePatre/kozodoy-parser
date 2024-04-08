@@ -11,8 +11,6 @@ func (a *App) initDeps(ctx context.Context) error {
 	inits := []configFunc{
 		a.initDiProvider,
 		a.initLogger,
-		a.initGRPCServer,
-		a.initGatewayServer,
 		a.initHTTPServer,
 	}
 
