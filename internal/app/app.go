@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 	"errors"
-	diProvider "github.com/BobrePatre/ProjectTemplate/internal/providers/di_provider"
+	"github.com/BobrePatre/kozodoy-parser/internal/providers/di"
 	"log"
 	"log/slog"
 	"net/http"
@@ -17,7 +17,7 @@ import (
 type configFunc func(context.Context) error
 
 type App struct {
-	diProvider *diProvider.DiProvider
+	diProvider *diProvider.Provider
 	httpServer *http.Server
 	logger     *slog.Logger
 }
@@ -29,7 +29,7 @@ const (
 )
 
 var (
-	httpServerTag = slog.String("server", "http")
+	httpServerTag = slog.String("server", "delivery")
 )
 
 func NewApp(ctx context.Context) (*App, error) {
@@ -43,12 +43,13 @@ func NewApp(ctx context.Context) (*App, error) {
 	return a, nil
 }
 
-func (a *App) Run() {
+func (a *App) Run() error {
 
 	wg := &sync.WaitGroup{}
-	wg.Add(2)
+	wg.Add(1)
 
 	stopChan := make(chan os.Signal, 1)
+	defer close(stopChan)
 	signal.Notify(stopChan, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
@@ -66,9 +67,10 @@ func (a *App) Run() {
 
 	slog.Info(stopMsg, httpServerTag)
 	if err := a.httpServer.Shutdown(ctx); err != nil {
-		log.Fatal("Server forced to shutdown: ", err)
+		return err
 	}
 	wg.Wait()
 
 	slog.Info("Servers shutdown successfully")
+	return nil
 }

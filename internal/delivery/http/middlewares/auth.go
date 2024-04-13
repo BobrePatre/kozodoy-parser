@@ -2,15 +2,15 @@ package middlewares
 
 import (
 	"errors"
-	"github.com/BobrePatre/ProjectTemplate/internal/providers/web_auth_provider"
-	authErrors "github.com/BobrePatre/ProjectTemplate/internal/providers/web_auth_provider/models"
+	"github.com/BobrePatre/kozodoy-parser/internal/providers/web_auth"
+	authErrors "github.com/BobrePatre/kozodoy-parser/internal/providers/web_auth/models"
 	"github.com/gin-gonic/gin"
 	"log/slog"
 	"net/http"
 	"strings"
 )
 
-func AuthMiddleware(provider webAuthProvider.WebAuthProvider) func(roles ...string) gin.HandlerFunc {
+func AuthMiddleware(provider webAuthProvider.Provider) func(roles ...string) gin.HandlerFunc {
 	return func(roles ...string) gin.HandlerFunc {
 		return func(ctx *gin.Context) {
 			authHeader := ctx.GetHeader("Authorization")

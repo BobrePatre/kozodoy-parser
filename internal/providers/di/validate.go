@@ -1,0 +1,10 @@
+package diProvider
+
+import "github.com/go-playground/validator/v10"
+
+func (p *Provider) Validate() *validator.Validate {
+	if p.validate == nil {
+		p.validate = validator.New()
+	}
+	return p.validate
+}

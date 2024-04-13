@@ -2,7 +2,7 @@ package app
 
 import (
 	"context"
-	"github.com/BobrePatre/ProjectTemplate/internal/constants"
+	"github.com/BobrePatre/kozodoy-parser/internal/constants"
 	"log/slog"
 	"os"
 )
@@ -12,7 +12,7 @@ var _ = (*App)(nil)
 func (a *App) initLogger(_ context.Context) error {
 	var logHandler slog.Handler
 
-	switch a.diProvider.AppConfig().ENV {
+	switch a.diProvider.AppConfig().MODE {
 	case constants.EnvDevelopment:
 		logHandler = slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
 			Level:     slog.LevelDebug,

@@ -2,8 +2,9 @@ package app
 
 import (
 	"context"
-	"github.com/BobrePatre/ProjectTemplate/internal/constants"
-	"github.com/BobrePatre/ProjectTemplate/internal/delivery/http/middlewares"
+	"github.com/BobrePatre/kozodoy-parser/internal/constants"
+	"github.com/BobrePatre/kozodoy-parser/internal/delivery/http/middlewares"
+	"github.com/BobrePatre/kozodoy-parser/internal/delivery/http/routes/parser"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log/slog"
@@ -14,7 +15,7 @@ var _ = (*App)(nil)
 
 func (a *App) initHTTPServer(_ context.Context) error {
 
-	switch a.diProvider.AppConfig().ENV {
+	switch a.diProvider.AppConfig().MODE {
 	case constants.EnvDevelopment:
 		gin.SetMode(gin.DebugMode)
 	case constants.EnvProduction:
@@ -28,7 +29,6 @@ func (a *App) initHTTPServer(_ context.Context) error {
 
 	corsCfg := a.diProvider.CorsConfig()
 	router.Use(cors.New(cors.Config{
-		AllowAllOrigins:           corsCfg.AllowAllOrigins,
 		AllowOrigins:              corsCfg.AllowOrigins,
 		AllowMethods:              corsCfg.AllowMethods,
 		AllowHeaders:              corsCfg.AllowHeaders,
@@ -44,8 +44,14 @@ func (a *App) initHTTPServer(_ context.Context) error {
 		CustomSchemas:             corsCfg.CustomSchemas,
 	}))
 
-	//authMiddlewareConstructor := a.diProvider.HttpAuthMiddlewareConstructor()
-	//v1RouterGroup := router.Group("/api/v1")
+	authMiddlewareConstructor := a.diProvider.HttpAuthMiddlewareConstructor()
+	v1RouterGroup := router.Group("/api/v1")
+
+	parser.NewRouter(
+		v1RouterGroup,
+		authMiddlewareConstructor(a.diProvider.WebAuthProvider()),
+		a.diProvider.ParserHandler(),
+	).Register()
 
 	a.httpServer = &http.Server{
 		Addr:    a.diProvider.HTTPConfig().Address(),

@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/BobrePatre/ProjectTemplate/internal/app"
+	"github.com/BobrePatre/kozodoy-parser/internal/app"
 )
 
 func main() {
@@ -15,7 +15,7 @@ func main() {
 		log.Fatalf("failed to init app: %s", err.Error())
 	}
 
-	a.Run()
+	err = a.Run()
 	if err != nil {
 		log.Fatalf("failed to run app: %s", err.Error())
 	}

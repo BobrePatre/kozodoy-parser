@@ -2,7 +2,7 @@ package app
 
 import (
 	"context"
-	"github.com/BobrePatre/ProjectTemplate/internal/providers/di_provider"
+	"github.com/BobrePatre/kozodoy-parser/internal/providers/di"
 )
 
 var _ = (*App)(nil)

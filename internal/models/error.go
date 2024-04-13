@@ -1,3 +1,7 @@
 package models
 
-type ()
+import "errors"
+
+var (
+	MenuNotValidErr = errors.New("menu is not valid")
+)
