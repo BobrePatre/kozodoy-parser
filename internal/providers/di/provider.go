@@ -6,6 +6,7 @@ import (
 	"github.com/BobrePatre/kozodoy-parser/internal/config/delivery"
 	"github.com/BobrePatre/kozodoy-parser/internal/config/security"
 	parserHandler "github.com/BobrePatre/kozodoy-parser/internal/delivery/http/handlers/parser"
+	"github.com/BobrePatre/kozodoy-parser/internal/providers/service_access"
 	webAuthProvider "github.com/BobrePatre/kozodoy-parser/internal/providers/web_auth"
 	parserRepository "github.com/BobrePatre/kozodoy-parser/internal/repository/parser"
 	parserService "github.com/BobrePatre/kozodoy-parser/internal/service/parser"
@@ -22,14 +23,17 @@ type Provider struct {
 	sqlDatabase      *sqlx.DB
 	postgresqlConfig *datasources.PostgresqlConfig
 
+	networkConfig *datasources.NetworkConfig
+
 	validate *validator.Validate
 
 	corsConfig *security.CorsConfig
 	httpConfig *delivery.HttpConfig
 	appConfig  *core.AppConfig
 
-	webAuthProvider webAuthProvider.Provider
-	webAuthConfig   *security.WebAuthConfig
+	webAuthProvider      webAuthProvider.Provider
+	webAuthConfig        *security.WebAuthConfig
+	servieAccessProvider service_access.Provider
 
 	httpAuthMiddlewareConstructor       webAuthProvider.HttpMiddlewareConstructor
 	grpcUnaryAuthInterceptorConstructor webAuthProvider.GrpcUnaryInterceptorConstructor

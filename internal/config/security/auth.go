@@ -7,9 +7,12 @@ import (
 )
 
 type WebAuthConfig struct {
-	PublicJwkUri      string        `env:"PUBLIC_JWK_URI" json:"publicJwkUri" validate:"required"`
-	RefreshJwkTimeout time.Duration `env:"REFRESH_JWK_TIMEOUT" json:"refreshJwkTimeout" env-default:"3h"`
-	ClientId          string        `env:"CLIENT_ID" json:"clientId" validate:"required"`
+	PublicJwkUri          string        `env:"PUBLIC_JWK_URI" json:"publicJwkUri" validate:"required"`
+	RefreshJwkTimeout     time.Duration `env:"REFRESH_JWK_TIMEOUT" json:"refreshJwkTimeout" env-default:"3h"`
+	ClientId              string        `env:"CLIENT_ID" json:"clientId" validate:"required"`
+	ServiceAccessClient   string        `env:"SERVICE_ACCESS_CLIENT" json:"serviceAccessClient" validate:"required"`
+	ServiceAccessSecret   string        `env:"SERVICE_ACCESS_SECRET" json:"serviceAccessSecret" validate:"required"`
+	ServiceAccessTokenUrl string        `env:"SERVICE_ACCESS_TOKEN_URL" json:"serviceAccessTokenUrl" validate:"required"`
 }
 
 func NewAuthConfig(validate *validator.Validate) (*WebAuthConfig, error) {
