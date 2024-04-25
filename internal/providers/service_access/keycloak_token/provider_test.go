@@ -14,7 +14,7 @@ func TestServiceAccessProvider(t *testing.T) {
 		config := security.WebAuthConfig{
 			ServiceAccessSecret:   "0bpXfFQf3444S2cUAAXv5NbmWsMmsjHc",
 			ServiceAccessTokenUrl: "http://localhost:8180/realms/kozodoy/protocol/openid-connect/token",
-			ServiceAccessClient:   "parser-client",
+			ServiceAccessClient:   "menu-client",
 		}
 
 		provider := NewProvider(config)
@@ -33,7 +33,7 @@ func TestServiceAccessProvider(t *testing.T) {
 		config := security.WebAuthConfig{
 			ServiceAccessSecret:   "0bpXfFQf3444S2cUAAXv5NbmWsMmsjHc",
 			ServiceAccessTokenUrl: "http://localhost:8180/realms/kozodoy/protocol/openid-connect/token",
-			ServiceAccessClient:   "parser-client",
+			ServiceAccessClient:   "menu-client",
 		}
 		provider := NewProvider(config)
 

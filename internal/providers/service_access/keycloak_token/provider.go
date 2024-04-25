@@ -41,9 +41,6 @@ func (p *Provider) GetAccess() (*Access, error) {
 		"client_id":     {p.config.ServiceAccessClient},
 		"client_secret": {p.config.ServiceAccessSecret},
 	}
-	//data.Set("client_id", p.config.ServiceAccessClient)
-	//data.Set("client_secret", p.config.ServiceAccessSecret)
-	//data.Set("grant_type", "client_credentials")
 
 	// Создаем запрос
 	req, err := http.NewRequest("POST", p.config.ServiceAccessTokenUrl, strings.NewReader(data.Encode()))

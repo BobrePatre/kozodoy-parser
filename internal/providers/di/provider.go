@@ -8,7 +8,9 @@ import (
 	parserHandler "github.com/BobrePatre/kozodoy-parser/internal/delivery/http/handlers/parser"
 	"github.com/BobrePatre/kozodoy-parser/internal/providers/service_access"
 	webAuthProvider "github.com/BobrePatre/kozodoy-parser/internal/providers/web_auth"
-	parserRepository "github.com/BobrePatre/kozodoy-parser/internal/repository/parser"
+	"github.com/BobrePatre/kozodoy-parser/internal/repository/categories"
+	"github.com/BobrePatre/kozodoy-parser/internal/repository/dish"
+	"github.com/BobrePatre/kozodoy-parser/internal/repository/menu"
 	parserService "github.com/BobrePatre/kozodoy-parser/internal/service/parser"
 
 	"github.com/go-playground/validator/v10"
@@ -38,9 +40,11 @@ type Provider struct {
 	httpAuthMiddlewareConstructor       webAuthProvider.HttpMiddlewareConstructor
 	grpcUnaryAuthInterceptorConstructor webAuthProvider.GrpcUnaryInterceptorConstructor
 
-	parserHandler    *parserHandler.Handler
-	parserService    *parserService.Service
-	parserRepository *parserRepository.Repository
+	parserHandler            *parserHandler.Handler
+	parserService            *parserService.Service
+	parserMenuRepository     *menu.Repository
+	parserCategoryRepository *categories.Repository
+	parserDishRepository     *dish.Repository
 }
 
 func NewDiProvider() *Provider {

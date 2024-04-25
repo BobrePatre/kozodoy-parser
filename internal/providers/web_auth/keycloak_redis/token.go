@@ -17,7 +17,7 @@ func (p *Provider) VerifyToken(ctx context.Context, tokenString string) (token *
 	token, err = jwt.Parse(tokenString, p.TokenKeyfunc(ctx))
 
 	if err != nil {
-		slog.Error("Failed to parser token", slog.String("err", err.Error()))
+		slog.Error("Failed to menu token", slog.String("err", err.Error()))
 		return token, authErrors.InvalidTokenError
 	}
 

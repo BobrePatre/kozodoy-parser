@@ -13,7 +13,6 @@ require (
 	github.com/lestrrat-go/jwx v1.2.29
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/redis/go-redis/v9 v9.5.1
-	github.com/tealeg/xlsx v1.0.5
 	github.com/xuri/excelize/v2 v2.8.1
 	google.golang.org/grpc v1.63.2
 )

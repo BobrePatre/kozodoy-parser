@@ -6,12 +6,7 @@ import (
 )
 
 type NetworkConfig struct {
-	Host            string `env:"HOST" json:"host" validate:"required"`
-	Port            int    `env:"PORT" json:"port" env-default:"5432"`
-	User            string `env:"USER" json:"user" env-default:"postgres"`
-	Password        string `env:"PASSWORD" json:"password" env-default:"postgres"`
-	Database        string `env:"DATABASE" json:"database" env-default:"postgres"`
-	CoreBackendHost string `env:"CORE_BACKEND_HOST" json:"coreBackendHost" env-default:"localhost:2000"`
+	CoreBackendHost string `env:"CORE_BACKEND_HOST" json:"coreBackendHost" env-default:"http://localhost:2000"`
 }
 
 func NewNetworkConfig(validate *validator.Validate) (*NetworkConfig, error) {

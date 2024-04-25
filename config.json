@@ -4,7 +4,13 @@
   },
   "auth": {
     "clientId": "kozodoy-client",
-    "publicJwkUri": "http://localhost:8180/realms/kozodoy/protocol/openid-connect/certs"
+    "publicJwkUri": "http://localhost:8180/realms/kozodoy/protocol/openid-connect/certs",
+    "serviceAccessTokenUrl": "http://localhost:8180/realms/kozodoy/protocol/openid-connect/token",
+    "serviceAccessSecret": "yVJgUHqzH2DYkfWolcmRER93xyNlqImL",
+    "serviceAccessClient": "parser-client"
+  },
+  "http": {
+    "port": 2024
   },
   "redis": {
     "host": "localhost",

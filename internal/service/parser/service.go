@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	"github.com/BobrePatre/kozodoy-parser/internal/models"
 	"github.com/xuri/excelize/v2"
 	"io"
@@ -10,24 +9,47 @@ import (
 	"strings"
 )
 
-type Repository interface {
-	InsertIntoMenu(menuType string, categories []models.Category) error
+type MenuRepository interface {
+	CreateMenu(title string, menuType string) (string, error)
+	GetMenuByType(menuType string) (string, error)
+
+	ClearMenu(menuId string) error
+}
+
+type CategoryRepository interface {
+	CreateCategory(category models.Category, menuId string) (string, error)
+}
+
+type DishRepository interface {
+	CreateDish(dish models.Dish, categoryId string) error
 }
 
 type Service struct {
-	repository Repository
+	menuRepository     MenuRepository
+	categoryRepository CategoryRepository
+	dishRepository     DishRepository
 }
 
-func NewService(repository Repository) *Service {
+func NewService(
+	menuRepository MenuRepository,
+	categoryRepository CategoryRepository,
+	dishRepository DishRepository,
+) *Service {
 	return &Service{
-		repository: repository,
+		menuRepository:     menuRepository,
+		categoryRepository: categoryRepository,
+		dishRepository:     dishRepository,
 	}
 }
 
 const (
-	menuTabKey = "меню для кассы"
+	menuTabKey       = "меню для кассы"
+	menuTypeToday    = "today"
+	menuTypeTomorrow = "tomorrow"
 )
 
+// Parse продумать работу с дробной ценой
+// Parse добавить логику с очисткой меню перед импортом, определяя это действие по параметрам запроса
 func (s *Service) Parse(fileReader io.Reader, menuType string) error {
 	excelReader, err := excelize.OpenReader(fileReader)
 	defer func(excelReader *excelize.File) {
@@ -40,7 +62,14 @@ func (s *Service) Parse(fileReader io.Reader, menuType string) error {
 		return err
 	}
 
-	var categories []models.Category
+	title := map[string]string{
+		menuTypeToday:    "На сегодня",
+		menuTypeTomorrow: "На завтра",
+	}
+
+	menu := models.Menu{
+		Title: title[menuType],
+	}
 
 	rows, err := excelReader.GetRows(menuTabKey)
 	if err != nil {
@@ -54,27 +83,55 @@ func (s *Service) Parse(fileReader io.Reader, menuType string) error {
 		if strings.Contains(row[1], "Меню на") {
 			continue
 		}
-		slog.Debug(fmt.Sprint(row))
 
 		if row[0] == "" && row[1] != "" {
-			categories = append(categories, models.Category{
+			menu.Categories = append(menu.Categories, models.Category{
 				Title: row[1],
 			})
 			currentIndex++
 		}
 		if row[0] != "" {
-			if len(categories) <= 0 {
+			if len(menu.Categories) <= 0 {
 				return models.MenuNotValidErr
 			}
 			price, _ := strconv.ParseFloat(row[2], 64)
-			categories[currentIndex].Dishes = append(categories[currentIndex].Dishes, models.Dish{
+			menu.Categories[currentIndex].Dishes = append(menu.Categories[currentIndex].Dishes, models.Dish{
 				Weight: strings.TrimSpace(row[0]),
 				Title:  strings.TrimSpace(row[1]),
 				Price:  price,
 			})
 		}
 	}
-	slog.Debug("parsed data", "categories", categories)
+	//slog.Debug("parsed data", "categories", menu.Categories)
+
+	remoteMenuId, err := s.menuRepository.GetMenuByType(menuType)
+	if err != nil {
+		slog.Info("can not get remote menu id", "err", err)
+		remoteMenuId, err = s.menuRepository.CreateMenu(menu.Title, menuType)
+		if err != nil {
+			slog.Error("can not create menu by type", "err", err)
+			return err
+		}
+		slog.Info("created menu by type", "type", menuType)
+	}
+	menu.Id = remoteMenuId
+	slog.Debug("remote Data", "menuId", remoteMenuId)
+
+	for _, category := range menu.Categories {
+		createdCategoryId, err := s.categoryRepository.CreateCategory(category, menu.Id)
+		if err != nil {
+			slog.Error("can not create category", "err", err)
+			continue
+		}
+		for _, dish := range category.Dishes {
+			err := s.dishRepository.CreateDish(dish, createdCategoryId)
+			if err != nil {
+				slog.Error("error when create dish", "err", err)
+				continue
+			}
+		}
+	}
+
 	return nil
 }
 

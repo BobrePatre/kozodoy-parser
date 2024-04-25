@@ -29,7 +29,7 @@ const (
 )
 
 var (
-	httpServerTag = slog.String("server", "delivery")
+	httpServerTag = slog.String("server", "http")
 )
 
 func NewApp(ctx context.Context) (*App, error) {
@@ -46,19 +46,19 @@ func NewApp(ctx context.Context) (*App, error) {
 func (a *App) Run() error {
 
 	wg := &sync.WaitGroup{}
-	wg.Add(1)
 
 	stopChan := make(chan os.Signal, 1)
 	defer close(stopChan)
 	signal.Notify(stopChan, syscall.SIGINT, syscall.SIGTERM)
 
-	go func() {
+	go func(wg *sync.WaitGroup) {
+		wg.Add(1)
 		defer wg.Done()
 
 		if err := a.runHTTPServer(); !errors.Is(err, http.ErrServerClosed) {
 			log.Fatal(err)
 		}
-	}()
+	}(wg)
 
 	<-stopChan
 

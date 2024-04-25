@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func NetworkDatacourceConfig(p *Provider) *datasources.NetworkConfig {
+func (p *Provider) NetworkDatacourceConfig() *datasources.NetworkConfig {
 	if p.networkConfig == nil {
 		cfg, err := datasources.NewNetworkConfig(p.Validate())
 		if err != nil {
