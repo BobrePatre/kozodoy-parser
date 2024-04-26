@@ -9,6 +9,7 @@ import (
 
 type GrpcConfig struct {
 	Port string `env:"PORT" env-default:"50051" json:"grpc"`
+	Host string `env:"HOST" env-default:"localhost" json:"host"`
 }
 
 func NewGrpcConfig(validate *validator.Validate) (*GrpcConfig, error) {

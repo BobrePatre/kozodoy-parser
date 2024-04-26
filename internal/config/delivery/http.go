@@ -8,7 +8,8 @@ import (
 )
 
 type HttpConfig struct {
-	Port int `json:"port" env:"PORT" env-default:"8080"`
+	Port int    `json:"port" env:"PORT" env-default:"8080"`
+	Host string `json:"host" env:"HOST" env-default:"localhost"`
 }
 
 func NewHTTPConfig(validate *validator.Validate) (*HttpConfig, error) {
@@ -24,5 +25,5 @@ func NewHTTPConfig(validate *validator.Validate) (*HttpConfig, error) {
 }
 
 func (cfg *HttpConfig) Address() string {
-	return net.JoinHostPort("localhost", fmt.Sprint(cfg.Port))
+	return net.JoinHostPort(cfg.Host, fmt.Sprint(cfg.Port))
 }
