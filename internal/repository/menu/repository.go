@@ -68,7 +68,7 @@ func (r *Repository) CreateMenu(title string, menuType string) (string, error) {
 func (r *Repository) GetMenuByType(menuType string) (string, error) {
 
 	slog.Debug("backend address", "address", r.networkDatacourceConfig.CoreBackendHost)
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s/%s", r.networkDatacourceConfig.CoreBackendHost, "menu/type/", menuType), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s/%s", r.networkDatacourceConfig.CoreBackendHost, "menu/type", menuType), nil)
 	if err != nil {
 		return "", err
 	}
