@@ -12,6 +12,6 @@ func SlogLoggerMiddleware() gin.HandlerFunc {
 		c.Next()
 
 		statusCode := c.Writer.Status()
-		slog.Info("Http Request", "status", statusCode, "path", path)
+		slog.Info("Http Request", "status", statusCode, "path", path, "ip", c.ClientIP(), "method", c.Request.Method)
 	}
 }
