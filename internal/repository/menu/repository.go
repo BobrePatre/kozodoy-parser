@@ -82,6 +82,10 @@ func (r *Repository) GetMenuByType(menuType string) (string, error) {
 		return "", err
 	}
 	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		slog.Error("error when reading response body", "err", err)
+		return "", err
+	}
 
 	data := struct {
 		Id string `json:"id"`
@@ -89,6 +93,7 @@ func (r *Repository) GetMenuByType(menuType string) (string, error) {
 
 	err = json.Unmarshal(respBody, &data)
 	if err != nil {
+		slog.Error("error when unmarshalling response body", "err", err, "response", string(respBody))
 		return "", err
 	}
 
