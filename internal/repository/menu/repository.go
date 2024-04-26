@@ -42,7 +42,7 @@ func (r *Repository) CreateMenu(title string, menuType string) (string, error) {
 	}
 
 	slog.Debug("backend address", "address", r.networkDatacourceConfig.CoreBackendHost)
-	req, err := http.NewRequest("POST", r.networkDatacourceConfig.CoreBackendHost+"/menu", bytes.NewBufferString(string(jsonData)))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/%s", r.networkDatacourceConfig.CoreBackendHost, "menu"), bytes.NewBufferString(string(jsonData)))
 	if err != nil {
 		return "", err
 	}

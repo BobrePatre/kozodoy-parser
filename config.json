@@ -1,19 +1,19 @@
 {
   "app": {
-    "mode": "development"
+    "mode": "production"
   },
   "auth": {
     "clientId": "kozodoy-client",
-    "publicJwkUri": "http://localhost:8180/realms/kozodoy/protocol/openid-connect/certs",
-    "serviceAccessTokenUrl": "http://localhost:8180/realms/kozodoy/protocol/openid-connect/token",
+    "publicJwkUri": "http://auth:8080/realms/kozodoy/protocol/openid-connect/certs",
+    "serviceAccessTokenUrl": "http://auth:8080/realms/kozodoy/protocol/openid-connect/token",
     "serviceAccessSecret": "yVJgUHqzH2DYkfWolcmRER93xyNlqImL",
     "serviceAccessClient": "parser-client"
   },
   "http": {
-    "port": 2024
+    "port": 8080
   },
   "redis": {
-    "host": "localhost",
-    "password": "password"
+    "host": "cache",
+    "password": "securedPasswordFromBober"
   }
 }

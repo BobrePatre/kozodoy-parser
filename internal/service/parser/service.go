@@ -94,6 +94,25 @@ func (s *Service) Parse(fileReader io.Reader, menuType string) error {
 			if len(menu.Categories) <= 0 {
 				return models.MenuNotValidErr
 			}
+			if strings.Contains(row[2], "/") {
+				slog.Debug("row", "row", row)
+				prices := strings.Split(row[2], "/")
+				weights := strings.Split(row[0], "/")
+				slog.Debug("Данные дробные", "weights", weights, "prices", prices)
+				price1, _ := strconv.ParseFloat(prices[0], 64)
+				price2, _ := strconv.ParseFloat(prices[1], 64)
+				menu.Categories[currentIndex].Dishes = append(menu.Categories[currentIndex].Dishes, models.Dish{
+					Title:  strings.TrimSpace(row[1]),
+					Weight: weights[0],
+					Price:  price1,
+				})
+				menu.Categories[currentIndex].Dishes = append(menu.Categories[currentIndex].Dishes, models.Dish{
+					Title:  strings.TrimSpace(row[1]),
+					Weight: weights[1],
+					Price:  price2,
+				})
+				continue
+			}
 			price, _ := strconv.ParseFloat(row[2], 64)
 			menu.Categories[currentIndex].Dishes = append(menu.Categories[currentIndex].Dishes, models.Dish{
 				Weight: strings.TrimSpace(row[0]),
