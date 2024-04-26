@@ -93,7 +93,7 @@ func (r *Repository) GetMenuByType(menuType string) (string, error) {
 
 	err = json.Unmarshal(respBody, &data)
 	if err != nil {
-		slog.Error("error when unmarshalling response body", "err", err, "response", string(respBody))
+		slog.Error("error when unmarshalling response body", "err", err, "responseData", string(respBody), "responseStatus", resp.Status)
 		return "", err
 	}
 
