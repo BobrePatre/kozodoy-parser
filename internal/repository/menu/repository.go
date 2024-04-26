@@ -70,8 +70,10 @@ func (r *Repository) GetMenuByType(menuType string) (string, error) {
 	slog.Debug("backend address", "address", r.networkDatacourceConfig.CoreBackendHost)
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s/%s", r.networkDatacourceConfig.CoreBackendHost, "menu/type", menuType), nil)
 	if err != nil {
+		slog.Error("error when creating http req to get menu by type", "err", err, "address", fmt.Sprintf("%s/%s/%s", r.networkDatacourceConfig.CoreBackendHost, "menu/type", menuType))
 		return "", err
 	}
+	slog.Debug("lalal", "address", fmt.Sprintf("%s/%s/%s", r.networkDatacourceConfig.CoreBackendHost, "menu/type", menuType))
 
 	req.Header.Set("Content-Type", "application/json")
 
