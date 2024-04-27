@@ -32,5 +32,10 @@ func NewCorsConfig(validate *validator.Validate) (*CorsConfig, error) {
 		return nil, err
 	}
 	slog.Debug("Load CORS configuration", "cfg", cfg)
+
+	if cfg.Config.AllowAllOrigins {
+		cfg.Config.AllowOrigins = nil
+	}
+
 	return &cfg.Config, nil
 }
