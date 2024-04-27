@@ -3,6 +3,7 @@ package security
 import (
 	"github.com/BobrePatre/kozodoy-parser/internal/config"
 	"github.com/go-playground/validator/v10"
+	"log/slog"
 	"time"
 )
 
@@ -30,6 +31,6 @@ func NewCorsConfig(validate *validator.Validate) (*CorsConfig, error) {
 	if err := config.Load(&cfg, validate); err != nil {
 		return nil, err
 	}
-
+	slog.Debug("Load CORS configuration", "cfg", cfg)
 	return &cfg.Config, nil
 }

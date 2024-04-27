@@ -29,6 +29,7 @@ func (a *App) initHTTPServer(_ context.Context) error {
 
 	corsCfg := a.diProvider.CorsConfig()
 	router.Use(cors.New(cors.Config{
+		AllowAllOrigins:           corsCfg.AllowAllOrigins,
 		AllowOrigins:              corsCfg.AllowOrigins,
 		AllowMethods:              corsCfg.AllowMethods,
 		AllowHeaders:              corsCfg.AllowHeaders,
