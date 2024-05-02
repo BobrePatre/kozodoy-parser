@@ -38,11 +38,10 @@ func (a *App) initHTTPServer(_ context.Context) error {
 			http.MethodDelete,
 			http.MethodOptions,
 		},
-		AllowedHeaders:       []string{"*"},
-		ExposedHeaders:       []string{"*"},
-		AllowCredentials:     true,
-		AllowPrivateNetwork:  true,
-		OptionsSuccessStatus: 200,
+		AllowedHeaders:      []string{"*"},
+		ExposedHeaders:      []string{"*"},
+		AllowCredentials:    true,
+		AllowPrivateNetwork: true,
 	}))
 
 	authMiddlewareConstructor := a.diProvider.HttpAuthMiddlewareConstructor()
