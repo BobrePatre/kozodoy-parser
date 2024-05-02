@@ -42,6 +42,8 @@ func (a *App) initHTTPServer(_ context.Context) error {
 		ExposedHeaders:      []string{"*"},
 		AllowCredentials:    true,
 		AllowPrivateNetwork: true,
+		OptionsPassthrough:  true,
+		Debug:               true,
 	}))
 
 	authMiddlewareConstructor := a.diProvider.HttpAuthMiddlewareConstructor()
