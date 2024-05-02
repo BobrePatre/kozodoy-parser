@@ -28,7 +28,23 @@ func (a *App) initHTTPServer(_ context.Context) error {
 	router.Use(middlewares.SlogLoggerMiddleware())
 
 	_ = a.diProvider.CorsConfig()
-	router.Use(cors.AllowAll())
+	router.Use(cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodDelete,
+			http.MethodOptions,
+		},
+		AllowedHeaders:       []string{"*"},
+		ExposedHeaders:       []string{"*"},
+		AllowCredentials:     true,
+		AllowPrivateNetwork:  true,
+		OptionsPassthrough:   true,
+		OptionsSuccessStatus: 200,
+	}))
 
 	authMiddlewareConstructor := a.diProvider.HttpAuthMiddlewareConstructor()
 	v1RouterGroup := router.Group("/api/v1")
