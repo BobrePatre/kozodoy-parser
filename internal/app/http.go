@@ -42,7 +42,6 @@ func (a *App) initHTTPServer(_ context.Context) error {
 		ExposedHeaders:       []string{"*"},
 		AllowCredentials:     true,
 		AllowPrivateNetwork:  true,
-		OptionsPassthrough:   true,
 		OptionsSuccessStatus: 200,
 	}))
 
