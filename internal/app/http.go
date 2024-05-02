@@ -5,8 +5,8 @@ import (
 	"github.com/BobrePatre/kozodoy-parser/internal/constants"
 	"github.com/BobrePatre/kozodoy-parser/internal/delivery/http/middlewares"
 	"github.com/BobrePatre/kozodoy-parser/internal/delivery/http/routes/parser"
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	cors "github.com/rs/cors/wrapper/gin"
 	"log/slog"
 	"net/http"
 )
@@ -27,23 +27,8 @@ func (a *App) initHTTPServer(_ context.Context) error {
 	router.Use(gin.Recovery())
 	router.Use(middlewares.SlogLoggerMiddleware())
 
-	corsCfg := a.diProvider.CorsConfig()
-	router.Use(cors.New(cors.Config{
-		AllowAllOrigins:           corsCfg.AllowAllOrigins,
-		AllowOrigins:              corsCfg.AllowOrigins,
-		AllowMethods:              corsCfg.AllowMethods,
-		AllowHeaders:              corsCfg.AllowHeaders,
-		MaxAge:                    corsCfg.MaxAge,
-		AllowCredentials:          corsCfg.AllowCredentials,
-		AllowWildcard:             corsCfg.AllowWildcard,
-		ExposeHeaders:             corsCfg.ExposeHeaders,
-		AllowBrowserExtensions:    corsCfg.AllowBrowserExtensions,
-		AllowWebSockets:           corsCfg.AllowWebSockets,
-		AllowFiles:                corsCfg.AllowFiles,
-		AllowPrivateNetwork:       corsCfg.AllowPrivateNetwork,
-		OptionsResponseStatusCode: corsCfg.OptionsResponseStatusCode,
-		CustomSchemas:             corsCfg.CustomSchemas,
-	}))
+	_ = a.diProvider.CorsConfig()
+	router.Use(cors.AllowAll())
 
 	authMiddlewareConstructor := a.diProvider.HttpAuthMiddlewareConstructor()
 	v1RouterGroup := router.Group("/api/v1")
