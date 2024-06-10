@@ -10,9 +10,9 @@ import (
 )
 
 type MenuRepository interface {
-	CreateMenu(title string, menuType string) (string, error)
+	CreateMenu(title string, menuType string, dateTo string) (string, error)
 	GetMenuByType(menuType string) (string, error)
-
+	UpdateMenu(menuId string, dateTo string) error
 	ClearMenu(menuId string) error
 }
 
@@ -81,6 +81,7 @@ func (s *Service) Parse(fileReader io.Reader, menuType string) error {
 			continue
 		}
 		if strings.Contains(row[1], "Меню на") {
+			menu.DateTo = strings.Replace(row[1], "Меню на", "", 1)
 			continue
 		}
 
@@ -126,7 +127,7 @@ func (s *Service) Parse(fileReader io.Reader, menuType string) error {
 	remoteMenuId, err := s.menuRepository.GetMenuByType(menuType)
 	if err != nil {
 		slog.Info("can not get remote menu id", "err", err)
-		remoteMenuId, err = s.menuRepository.CreateMenu(menu.Title, menuType)
+		remoteMenuId, err = s.menuRepository.CreateMenu(menu.Title, menuType, "s")
 		if err != nil {
 			slog.Error("can not create menu by type", "err", err)
 			return err
@@ -135,7 +136,11 @@ func (s *Service) Parse(fileReader io.Reader, menuType string) error {
 	}
 	menu.Id = remoteMenuId
 	slog.Debug("remote Data", "menuId", remoteMenuId)
-
+	err = s.menuRepository.UpdateMenu(menu.Id, menu.DateTo)
+	if err != nil {
+		slog.Error("can not update remote menu", "err", err)
+		return err
+	}
 	for _, category := range menu.Categories {
 		createdCategoryId, err := s.categoryRepository.CreateCategory(category, menu.Id)
 		if err != nil {

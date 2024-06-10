@@ -5,5 +5,6 @@ type (
 		Id         string
 		Title      string
 		Categories []Category
+		DateTo     string
 	}
 )

@@ -27,13 +27,53 @@ type Repository struct {
 	networkDatacourceConfig *datasources.NetworkConfig
 }
 
-func (r *Repository) CreateMenu(title string, menuType string) (string, error) {
+func (r *Repository) UpdateMenu(menuId string, dateTo string) error {
+	reqData := struct {
+		Id     string `json:"id"`
+		DateTo string `json:"dateTo"`
+	}{
+
+		DateTo: dateTo,
+	}
+
+	jsonData, err := json.Marshal(reqData)
+	if err != nil {
+		return err
+	}
+
+	slog.Debug("backend address", "address", r.networkDatacourceConfig.CoreBackendHost)
+	req, err := http.NewRequest("PUT", fmt.Sprintf("%s/%s", r.networkDatacourceConfig.CoreBackendHost, "menu"), bytes.NewBufferString(string(jsonData)))
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := r.provider.DoRequest(req)
+	if err != nil {
+		return err
+	}
+
+	respData := struct {
+		Id string `json:"id"`
+	}{}
+	if err := json.NewDecoder(resp.Body).Decode(&respData); err != nil {
+		return err
+	}
+
+	slog.Debug("backend response update menu", "id", respData.Id)
+	return nil
+}
+
+func (r *Repository) CreateMenu(title string, menuType string, dateTo string) (string, error) {
 	reqData := struct {
 		Title    string `json:"title"`
 		MenuType string `json:"type"`
+		DateTo   string `json:"dateTo"`
 	}{
 		Title:    title,
 		MenuType: menuType,
+		DateTo:   dateTo,
 	}
 
 	jsonData, err := json.Marshal(reqData)
