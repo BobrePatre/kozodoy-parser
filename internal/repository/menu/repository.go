@@ -42,7 +42,7 @@ func (r *Repository) UpdateMenu(menuId string, dateTo string) error {
 	}
 
 	slog.Debug("backend address", "address", r.networkDatacourceConfig.CoreBackendHost)
-	req, err := http.NewRequest("PUT", fmt.Sprintf("%s/%s", r.networkDatacourceConfig.CoreBackendHost, "menu"), bytes.NewBufferString(string(jsonData)))
+	req, err := http.NewRequest("PATCH", fmt.Sprintf("%s/%s", r.networkDatacourceConfig.CoreBackendHost, "menu"), bytes.NewBufferString(string(jsonData)))
 	if err != nil {
 		return err
 	}
