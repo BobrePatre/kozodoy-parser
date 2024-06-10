@@ -32,7 +32,7 @@ func (r *Repository) UpdateMenu(menuId string, dateTo string) error {
 		Id     string `json:"id"`
 		DateTo string `json:"dateTo"`
 	}{
-
+		Id:     menuId,
 		DateTo: dateTo,
 	}
 
@@ -49,19 +49,10 @@ func (r *Repository) UpdateMenu(menuId string, dateTo string) error {
 
 	req.Header.Set("Content-Type", "application/json")
 
-	resp, err := r.provider.DoRequest(req)
+	_, err = r.provider.DoRequest(req)
 	if err != nil {
 		return err
 	}
-
-	respData := struct {
-		Id string `json:"id"`
-	}{}
-	if err := json.NewDecoder(resp.Body).Decode(&respData); err != nil {
-		return err
-	}
-
-	slog.Debug("backend response update menu", "id", respData.Id)
 	return nil
 }
 
