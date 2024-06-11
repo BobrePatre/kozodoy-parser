@@ -84,7 +84,7 @@ func (s *Service) Parse(fileReader io.Reader, menuType string) error {
 			continue
 		}
 
-		if (i == rowsLen-1) && (i == rowsLen-2) && (i == rowsLen-3) {
+		if (i == rowsLen-1) || (i == rowsLen-2) || (i == rowsLen-3) {
 			continue
 		}
 
