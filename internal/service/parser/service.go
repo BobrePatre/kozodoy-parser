@@ -77,6 +77,9 @@ func (s *Service) Parse(fileReader io.Reader, menuType string) error {
 	rowsLen := len(rows)
 	currentIndex := -1
 	for i, row := range rows {
+
+		slog.Info("Parse processing", "rowsLen", rowsLen, "currentRow", i, "row", row, "currentIndex", currentIndex)
+
 		if checkRowIsEmpty(row) {
 			continue
 		}
