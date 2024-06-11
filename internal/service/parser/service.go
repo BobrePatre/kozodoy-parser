@@ -48,8 +48,6 @@ const (
 	menuTypeTomorrow = "tomorrow"
 )
 
-// Parse продумать работу с дробной ценой
-// Parse добавить логику с очисткой меню перед импортом, определяя это действие по параметрам запроса
 func (s *Service) Parse(fileReader io.Reader, menuType string) error {
 	excelReader, err := excelize.OpenReader(fileReader)
 	defer func(excelReader *excelize.File) {
@@ -75,11 +73,18 @@ func (s *Service) Parse(fileReader io.Reader, menuType string) error {
 	if err != nil {
 		return err
 	}
+
+	rowsLen := len(rows)
 	currentIndex := -1
-	for _, row := range rows {
+	for i, row := range rows {
 		if checkRowIsEmpty(row) {
 			continue
 		}
+
+		if (i == rowsLen-1) && (i == rowsLen-2) && (i == rowsLen-3) {
+			continue
+		}
+
 		if strings.Contains(row[1], "Меню на") {
 			menu.DateTo = strings.Replace(row[1], "Меню на", "", 1)
 			continue
